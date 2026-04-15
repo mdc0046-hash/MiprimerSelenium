@@ -7,30 +7,35 @@ public class LoginPage {
 
     private WebDriver driver;
 
-    private By userField = By.id("user-name");
-    private By passField = By.id("password");
-    private By loginBtn = By.id("login-button");
+    private By usernameInput = By.id("user-name");
+    private By passwordInput = By.id("password");
+    private By loginButton = By.id("login-button");
+    private By errorMessage = By.cssSelector("h3[data-test='error']");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void ingresarUsuario(String user) {
-        driver.findElement(userField).sendKeys(user);
+    public void escribirUsuario(String usuario) {
+        driver.findElement(usernameInput).sendKeys(usuario);
     }
 
-    public void ingresarPassword(String pass) {
-        driver.findElement(passField).sendKeys(pass);
+    public void escribirPassword(String password) {
+        driver.findElement(passwordInput).sendKeys(password);
     }
 
-    public void clickLogin() {
-        driver.findElement(loginBtn).click();
+    public void pulsarLogin() {
+        driver.findElement(loginButton).click();
     }
 
-    // Parte 5: método login completo
-    public void login(String user, String pass) {
-        ingresarUsuario(user);
-        ingresarPassword(pass);
-        clickLogin();
+    public void login(String usuario, String password) {
+        escribirUsuario(usuario);
+        escribirPassword(password);
+        pulsarLogin();
+    }
+
+    public String obtenerMensajeError() {
+        return driver.findElement(errorMessage).getText();
     }
 }
+

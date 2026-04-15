@@ -1,30 +1,39 @@
 package tests;
 
-import org.junit.jupiter.api.Test;
-import pages.LoginPage;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoginTest extends BaseTest {
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-        @Test
-        void loginCorrecto() {
-                LoginPage loginPage = new LoginPage(driver);
+import pages.LoginPage;
 
-                loginPage.login("standard_user", "secret_sauce");
+public class LoginTest {
 
-                assertTrue(driver.getCurrentUrl().contains("inventory"),
-                        "El usuario debería entrar a la página de inventario tras un login correcto");
+        private WebDriver driver;
+        private LoginPage loginPage;
+
+        @BeforeEach
+        public void setUp() {
+                driver = new ChromeDriver();
+                driver.get("https://www.saucedemo.com/");
+                loginPage = new LoginPage(driver);
+        }
+
+        @AfterEach
+        public void tearDown() {
+                driver.quit();
         }
 
         @Test
-        void loginIncorrecto() {
-                LoginPage loginPage = new LoginPage(driver);
+        public void loginCorrecto() {
+                loginPage.login("standard_user", "secret_sauce");
+                assertTrue(driver.getCurrentUrl().contains("inventory"));
+        }
 
-                loginPage.login("standard_user", "clave_mal");
-
-                assertTrue(driver.findElement(
-                        org.openqa.selenium.By.cssSelector("[data-test='error']")
-                ).isDisplayed(), "Debería mostrarse un mensaje de error al fallar el login");
+        @Test
+        public void loginIncorrecto() {
+                loginPage.login("standard_user", "password_mal");
+                assertTrue(loginPage.obtenerMensajeError().contains("Epic sadface"));
         }
 }
